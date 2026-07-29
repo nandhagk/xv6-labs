@@ -72,6 +72,19 @@ def test_memdump_examples():
             '^1751606885',
             '^abcdefgh12345678',
             '^64636261')
+    
+@test(10, "memdump, not enough data for i, p, h, c, s")
+def test_memdump_not_enough_data():
+    r.run_qemu(shell_script([ "printf abc | memdump i",
+                              "printf 1234567 | memdump p",
+                              "printf a | memdump h",
+                              "printf '' | memdump c",
+                              "printf 1234567 | memdump s" ]))
+    r.match("^memdump: not enough data for 'i'",
+            "^memdump: not enough data for 'p'",
+            "^memdump: not enough data for 'h'",
+            "^memdump: not enough data for 'c'",
+            "^memdump: not enough data for 's'")
 
 @test(10, "find, in current directory")
 def test_find_curdir():
