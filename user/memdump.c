@@ -2,7 +2,7 @@
 #include "user/user.h"
 #include "kernel/fcntl.h"
 
-void memdump(char *fmt, char *data);
+void memdump(char *fmt, char *data, int len);
 
 int
 main(int argc, char *argv[])
@@ -10,14 +10,15 @@ main(int argc, char *argv[])
   if(argc == 1){
     printf("Example 1:\n");
     int a[2] = { 61810, 2025 };
-    memdump("ii", (char*) a);
-    
+    memdump("ii", (char*) a, sizeof(a));
+
     printf("Example 2:\n");
-    memdump("S", "a string");
-    
+    char *t = "a string";
+    memdump("S", t, strlen(t));
+
     printf("Example 3:\n");
     char *s = "another";
-    memdump("s", (char *) &s);
+    memdump("s", (char *) &s, sizeof(char *));
 
     struct sss {
       char *ptr;
@@ -26,18 +27,18 @@ main(int argc, char *argv[])
       char byte;
       char bytes[8];
     } example;
-    
+
     example.ptr = "hello";
     example.num1 = 1819438967;
     example.num2 = 100;
     example.byte = 'z';
     strcpy(example.bytes, "xyzzy");
-    
+
     printf("Example 4:\n");
-    memdump("pihcS", (char*) &example);
-    
+    memdump("pihcS", (char*) &example, sizeof(example));
+
     printf("Example 5:\n");
-    memdump("sccccc", (char*) &example);
+    memdump("sccccc", (char*) &example, sizeof(example));
   } else if(argc == 2){
     // format in argv[1], up to 512 bytes of data from standard input.
     char data[512];
@@ -49,7 +50,7 @@ main(int argc, char *argv[])
         break;
       n += nn;
     }
-    memdump(argv[1], data);
+    memdump(argv[1], data, strlen(data));
   } else {
     printf("Usage: memdump [format]\n");
     exit(1);
@@ -58,7 +59,7 @@ main(int argc, char *argv[])
 }
 
 void
-memdump(char *fmt, char *data)
+memdump(char *fmt, char *data, int len)
 {
   // Your code here.
 
