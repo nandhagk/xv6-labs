@@ -155,5 +155,9 @@ def test_test_find_sh():
 @test(1, "time")
 def test_time():
     check_time()
+
+@test(1, "references")
+def test_references():
+    check_references()
     
 run_tests()
