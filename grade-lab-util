@@ -75,11 +75,12 @@ def test_memdump_examples():
     
 @test(10, "memdump, not enough data for i, p, h, c, s")
 def test_memdump_not_enough_data():
-    r.run_qemu(shell_script([ "printf abc | memdump i",
-                              "printf 1234567 | memdump p",
-                              "printf a | memdump h",
-                              "printf '' | memdump c",
-                              "printf 1234567 | memdump s" ]))
+    # echo appends a newline, so take that into account.
+    r.run_qemu(shell_script([ "echo abc | memdump ci",
+                              "echo 1234567 | memdump cp",
+                              "echo a | memdump ch",
+                              "echo | memdump cc",
+                              "echo 1234567 | memdump cs" ]))
     r.match("^memdump: not enough data for 'i'",
             "^memdump: not enough data for 'p'",
             "^memdump: not enough data for 'h'",
